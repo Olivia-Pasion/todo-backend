@@ -5,8 +5,6 @@ const app = require('../lib/app');
 const UserService = require('../lib/services/UserService');
 
 const testUser = {
-  firstName: 'jane',
-  lastName: 'Doe',
   email: 'abc@123',
   password: 'abc123'
 };
@@ -27,14 +25,12 @@ describe('user routes', () => {
   beforeEach(() => {
     return setup(pool);
   });
-  it('registers a new user', async () => {
+  it('#POST registers a new user', async () => {
     const res = await request(app).post('/api/v1/users').send(testUser);
-    const { firstName, lastName, email } = testUser;
-
+    const { email } = testUser;
+    
     expect(res.body).toEqual({
       id: expect.any(String),
-      firstName,
-      lastName,
       email,
     });
   });
