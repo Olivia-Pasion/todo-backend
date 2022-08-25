@@ -44,7 +44,7 @@ describe('user routes', () => {
 
     expect(res.status).toEqual(200);  
   });
-  it.only('#GET /me should return authenticated users', async () => {
+  it('#GET /me should return authenticated users', async () => {
     
     const [agent, user] = await registerAndLogin();
     
