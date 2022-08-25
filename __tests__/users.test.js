@@ -14,7 +14,7 @@ const registerAndLogin = async (userProps = {}) => {
 
   const agent = request.agent(app);
 
-  const user = await UserService.create({ ...testUser, ...userProps });
+  const [, user] = await UserService.create({ ...testUser, ...userProps });
 
   const { email } = user;
   await agent.post('/api/v1/users/sessions').send({ email, password });
@@ -34,7 +34,7 @@ describe('user routes', () => {
       email,
     });
   });
-  it.only('#POST /sessions returns 200 for existing users', async () => {
+  it('#POST /sessions returns 200 for existing users', async () => {
     const agent = request.agent(app);
     await agent
       .post('/api/v1/users')
@@ -44,6 +44,18 @@ describe('user routes', () => {
 
     expect(res.status).toEqual(200);  
   });
+  it.only('#GET /me should return authenticated users', async () => {
+    
+    const [agent, user] = await registerAndLogin();
+    
+    const me = await agent.get('/api/v1/users/me');
+    expect(me.body).toEqual({
+      ...user,
+      exp: expect.any(Number),
+      iat: expect.any(Number),
+    });
+  });
+
   afterAll(() => {
     pool.end();
   });
