@@ -28,11 +28,21 @@ describe('user routes', () => {
   it('#POST registers a new user', async () => {
     const res = await request(app).post('/api/v1/users').send(testUser);
     const { email } = testUser;
-    
+
     expect(res.body).toEqual({
       id: expect.any(String),
       email,
     });
+  });
+  it.only('#POST /sessions returns 200 for existing users', async () => {
+    const agent = request.agent(app);
+    await agent
+      .post('/api/v1/users')
+      .send(testUser);
+
+    const res = await agent.post('/api/v1/users/sessions').send(testUser);
+
+    expect(res.status).toEqual(200);  
   });
   afterAll(() => {
     pool.end();
