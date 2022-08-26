@@ -30,7 +30,9 @@ describe('todos routes', () => {
     const res = await agent.get('/api/v1/todos');
     console.log(res.body);
     expect(res.status).toEqual(200);
-    expect(res.body).toBe({ message: 'All caught up!' });
+    expect(res.body[0]).toEqual({
+      
+    });
   });
   afterAll(() => {
     pool.end();
